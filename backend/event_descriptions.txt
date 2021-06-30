@@ -1,0 +1,38 @@
+
+https://github.com/awsdocs/aws-1-click-developer-guide/blob/master/doc_source/1click-programming.md
+AWS IoT 1-Click Click Events
+Devices of type button publish a click event each time they are clicked. You can subscribe to this event by:
+
+Calling the device SetOnClickCallback method on a device.
+Configuring the associated project appropriately, as shown in the earlier create project code example.
+In the following example, be aware that the placementInfo section is only present when the device has an associated placement. For more information, see Projects, Templates, and Placements.
+
+{
+    "deviceEvent": {
+      "buttonClicked": {
+        "clickType": "SINGLE",
+        "reportedTime": "2018-05-04T23:26:33.747Z"
+      }
+    },
+    "deviceInfo": {
+      "attributes": {
+        "key3": "value3",
+        "key1": "value1",
+        "key4": "value4"
+      },
+      "type": "button",
+      "deviceId": " G030PMXXXXXXXXXX ",
+      "remainingLife": 5.00
+    },
+    "placementInfo": {
+      "projectName": "test",
+      "placementName": "myPlacement",
+      "attributes": {
+        "location": "Seattle",
+        "equipment": "printer"
+      },
+      "devices": {
+        "myButton": " G030PMXXXXXXXXXX "
+      }
+    }
+  }

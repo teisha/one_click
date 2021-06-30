@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": "C:\\Users\\laima\\.pyenv\\pyenv-win\\versions\\3.8.1\\python.exe",
+    "workbench.colorCustomizations": {
+        "titleBar.activeForeground": "#fcf7f7ec",
+        "titleBar.inactiveForeground": "#000000CC",
+        "titleBar.activeBackground": "#48024e",
+        "titleBar.inactiveBackground": "#ea00ff"
+    }
+}
