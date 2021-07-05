@@ -9,9 +9,9 @@ Parameters:
   Environment:
     Type: String
     Description: Environment being deployed    
-  FrontEndUrl:
-    Type: String
-    Description: Front End URL for CORS
+  # FrontEndUrl:
+  #   Type: String
+  #   Description: Front End URL for CORS
 
 
 Globals:
@@ -24,8 +24,7 @@ Globals:
         # APP_URL: 
         #   Ref: FrontEndUrl
         LOGGING_LEVEL: "INFO"
-        DYNAMO_TABLE:
-          Ref: DataTable
+        CLICK_TABLE: !Ref: DataTable
 Resources:
   DataTable:
     Type: "AWS::DynamoDB::Table"
@@ -368,6 +367,10 @@ Outputs:
   #   Description: The ID of the Cloudfront Distribution used to invalidate front end after deploy
   #   Value: !Ref ClientCloudFrontDistro
   TableName:
-    Description: The name of the table
+    Description: The name of the table holding click data
     Value: !Ref DataTable
+  IotLambda:
+    Description: The name of the lambda to hook up to the Iot project
+    Value: !Ref HandleClick
+
 
