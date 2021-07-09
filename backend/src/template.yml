@@ -64,6 +64,35 @@ Resources:
           Projection:
             ProjectionType: ALL
 
+  # HandleClick:
+  #   Type: "AWS::Serverless::Function"
+  #   Properties:
+  #     Handler: clicker.handler
+  #     Runtime: python3.8
+  #     Policies:
+  #       - Version: "2012-10-17"
+  #         Statement:
+  #           - Effect: Allow
+  #             Action:
+  #               - "dynamodb:Query"
+  #               - "dynamodb:GetItem"
+  #             Resource:
+  #               - "Fn::GetAtt":
+  #                   - DataTable
+  #                   - Arn
+  #               - "Fn::Join":
+  #                   - /
+  #                   - - "Fn::GetAtt":
+  #                         - DataTable
+  #                         - Arn
+  #                     - index
+  #                     - startIndex
+
+
+
+
+
+
   # Api:
   #   Type: AWS::Serverless::Api
   #   Properties:
@@ -101,29 +130,7 @@ Resources:
   #           UserPoolArn: !GetAtt CognitoUserPool.Arn
   #       AddDefaultAuthorizerToCorsPreflight: False
  
-  HandleClick:
-    Type: "AWS::Serverless::Function"
-    Properties:
-      Handler: clicker.handler
-      Runtime: python3.8
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Action:
-                - "dynamodb:Query"
-                - "dynamodb:GetItem"
-              Resource:
-                - "Fn::GetAtt":
-                    - DataTable
-                    - Arn
-                - "Fn::Join":
-                    - /
-                    - - "Fn::GetAtt":
-                          - DataTable
-                          - Arn
-                      - index
-                      - startIndex
+
 
   # UserApiHandler:
   #   Type: "AWS::Serverless::Function"
@@ -371,6 +378,6 @@ Outputs:
     Value: !Ref DataTable
   IotLambda:
     Description: The name of the lambda to hook up to the Iot project
-    Value: !Ref HandleClick
+    Value: "ComingSoon"  # !Ref HandleClick
 
 

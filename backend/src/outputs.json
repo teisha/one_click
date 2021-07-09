@@ -1,0 +1,1 @@
+[ { "OutputKey": "TableName", "OutputValue": "dev-one-click-data-table", "Description": "The name of the table holding click data" }, { "OutputKey": "IotLambda", "OutputValue": "ComingSoon", "Description": "The name of the lambda to hook up to the Iot project" } ]
