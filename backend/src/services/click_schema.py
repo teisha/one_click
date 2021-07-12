@@ -31,7 +31,8 @@ def save_click(click_object: dict):
             clickType=click_db_object.get("clickType"),
             action=click_db_object.get("action"),
             deviceInfo=click_db_object.get("deviceInfo"),
-            placementInfo=click_db_object.get("placementInfo")
+            placementInfo=click_db_object.get("placementInfo"),
+            timestamp=decimal.Decimal(datetime.now().timestamp())
         ) 
     print(result)
     message = f'Successfully Saved: {click_object.get("clickType")} at {click_object.get("reportedTime")}' if result.get('http_status') == 200 else \
@@ -40,15 +41,15 @@ def save_click(click_object: dict):
         'message': message}   
 
 
-def is_valid(schedule: dict):
+def is_valid(clickthing: dict):
     valid: bool = True
-    if schedule.get("project", None) == None or \
-        schedule.get("dateClicked", None) == None:
+    if clickthing.get("project", None) == None or \
+        clickthing.get("dateClicked", None) == None:
         print("Click Object doesn't contain key data")
         valid=False
-    if schedule.get("clickType", None) == None or \
-        schedule.get("deviceInfo", None) == None or \
-        schedule.get("placementInfo", None) == None:
+    if clickthing.get("clickType", None) == None or \
+        clickthing.get("deviceInfo", None) == None or \
+        clickthing.get("placementInfo", None) == None:
         print('Click Object does not contain click event data')
         valid=False
     return valid
@@ -84,7 +85,8 @@ def convert_to_click_object(data: dict):
         clickType=data.get("clickType"),
         action=data.get("action"),
         deviceInfo=data.get("deviceInfo"),
-        placementInfo=data.get("placementInfo")
+        placementInfo=data.get("placementInfo"),
+        timestamp=data.get("timestamp")
     )
 
 def convert_to_db_object(click_object: dict):
@@ -99,5 +101,6 @@ def convert_to_db_object(click_object: dict):
         action=click_object.get("action"),
         deviceInfo=converted_deviceInfo,
         placementInfo=click_object.get("placementInfo"),
+        timestamp=click_object.get("timestamp")
     )   
     return db_object

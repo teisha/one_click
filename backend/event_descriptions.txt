@@ -7,6 +7,58 @@ Calling the device SetOnClickCallback method on a device.
 Configuring the associated project appropriately, as shown in the earlier create project code example.
 In the following example, be aware that the placementInfo section is only present when the device has an associated placement. For more information, see Projects, Templates, and Placements.
 
+
+Actual Event:
+{
+    "deviceInfo": {
+        "deviceId": "P5SJVQ20074A68G9",
+        "type": "button",
+        "remainingLife": 25,
+        "attributes": {
+            "projectRegion": "us-west-2",
+            "projectName": "OneClickWorkTracker",
+            "placementName": "WorkDeskPlacement",
+            "deviceTemplateName": "DynamoClickRecording"
+        }
+    },
+    "deviceEvent": {
+        "buttonClicked": {
+            "clickType": "LONG",
+            "reportedTime": "2021-07-11T03:32:06.597Z",
+            "additionalInfo": {
+                "version": "1.8.0"
+            }
+        }
+    },
+    "placementInfo": {
+        "projectName": "OneClickWorkTracker",
+        "placementName": "WorkDeskPlacement",
+        "attributes": {},
+        "devices": {
+            "DynamoClickRecording": "P5SJVQ20074A68G9"
+        }
+    },
+    "devicePayload": {
+        "clickType": "LONG",
+        "serialNumber": "P5SJVQ20074A68G9",
+        "remainingLife": 25,
+        "version": "1.8.0",
+        "certificateId": "33f0b6f427f0082f7b6c21c2ae2cda06d6e3f4d5e90a9d5309cbcc736313fd5b",
+        "reportedTime": 1625974326597,
+        "topic": "/Devices/Button/P5SJVQ"
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 {
     "deviceEvent": {
       "buttonClicked": {

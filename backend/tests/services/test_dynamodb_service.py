@@ -2,6 +2,7 @@ import sys , os
 print(sys.path)
 
 
+
 test_item = {
     'PK': "CLICK|oneclick|2019_01_12",
     'SK': "2018-05-04T23:26:33.747Z",
@@ -52,7 +53,7 @@ item={
 
 
 
-# Run tests from src directory /c/git/school_schedules/backend/src
+# Run tests from src directory /c/git/one_click/backend/src
 # ../venv_linux/bin/python -m pytest -s ../tests/services/test_dynamodb_service.py
 # python -m pytest -s tests/services/test_dynamodb_service.py >> printout.txt
 # ../venv_linux/bin/python -m pytest -s ../tests/services/test_dynamodb_service.py -k "sortKey"

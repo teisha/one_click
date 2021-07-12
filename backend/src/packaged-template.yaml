@@ -9,6 +9,10 @@ Parameters:
   Environment:
     Type: String
     Description: Environment being deployed
+  LoggingLevel:
+    Type: String
+    Description: Set the logging level for lambda logging
+    Default: INFO
 Globals:
   Function:
     Timeout: 10
@@ -16,9 +20,12 @@ Globals:
     CodeUri: .
     Environment:
       Variables:
-        LOGGING_LEVEL: INFO
         CLICK_TABLE:
-          'Fn::Ref:': DataTable
+          Ref: DataTable
+        LOGGING_LEVEL:
+          Ref: LoggingLevel
+        SECRET_PARAM:
+          Fn::Sub: /Connect/${Environment}/Hubitat
 Resources:
   DataTable:
     Type: AWS::DynamoDB::Table
@@ -58,6 +65,84 @@ Resources:
           KeyType: RANGE
         Projection:
           ProjectionType: ALL
+  HubitatParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name:
+        Fn::Sub: /Connect/${Environment}/Hubitat
+      Type: String
+      Value: non-Secure-string
+      Description: SSM Parameter for call to IOT Manager.
+      Tags:
+        Project:
+          Ref: ProjectName
+        Environment:
+          Ref: Environment
+  HandleClick:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_clicker.handler
+      Runtime: python3.8
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: DataTable
+      - Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+          Resource:
+          - Fn::GetAtt:
+            - DataTable
+            - Arn
+          - Fn::Join:
+            - /
+            - - Fn::GetAtt:
+                - DataTable
+                - Arn
+              - index
+              - startIndex
+        - Sid: SSMDescribeParametersPolicy
+          Effect: Allow
+          Action:
+          - ssm:DescribeParameters
+          Resource: '*'
+        - Effect: Allow
+          Action:
+          - ssm:GetParameter
+          - ssm:PutParameter
+          Resource:
+          - Fn::Join:
+            - ''
+            - - 'arn:aws:ssm:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :parameter
+              - Ref: HubitatParameter
+        - Effect: Allow
+          Action:
+          - kms:CreateAlias
+          - kms:Decrypt
+          - kms:Encrypt
+          - kms:UpdateAlias
+          Resource:
+          - Fn::Join:
+            - ':'
+            - - arn:aws:kms
+              - Ref: AWS::Region
+              - Ref: AWS::AccountId
+              - key/*
+          - Fn::Join:
+            - ':'
+            - - arn:aws:kms
+              - Ref: AWS::Region
+              - Ref: AWS::AccountId
+              - alias/*
+      CodeUri: s3://serverless-deploy-all-lsft-projects/29c02b3cf7afc94c62239c5cc0f82ee2
 Outputs:
   TableName:
     Description: The name of the table holding click data
@@ -65,4 +150,5 @@ Outputs:
       Ref: DataTable
   IotLambda:
     Description: The name of the lambda to hook up to the Iot project
-    Value: ComingSoon
+    Value:
+      Ref: HandleClick
