@@ -32,7 +32,7 @@ def save_click(click_object: dict):
             action=click_db_object.get("action"),
             deviceInfo=click_db_object.get("deviceInfo"),
             placementInfo=click_db_object.get("placementInfo"),
-            timestamp=decimal.Decimal(datetime.now().timestamp())
+            timestamp=click_db_object.get("timestamp")
         ) 
     print(result)
     message = f'Successfully Saved: {click_object.get("clickType")} at {click_object.get("reportedTime")}' if result.get('http_status') == 200 else \
@@ -76,7 +76,7 @@ def is_valid(clickthing: dict):
 # }
 
 def convert_to_click_object(data: dict): 
-    print('CONVERT DB TO CLICK')
+
     pk = data.get("pk").split("|")
     return dict(
         project=pk[1],

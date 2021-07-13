@@ -2,6 +2,8 @@ import sys , os, json
 print(sys.path)
 import logging
 from datetime import datetime
+import decimal
+import pytz
 import services.click_schema as clicky
 import services.bulb_service as bulby
 
@@ -20,7 +22,10 @@ def handler(event: any, context: any):
     clickType = event["deviceEvent"]["buttonClicked"]["clickType"]
     reportedTime = event["deviceEvent"]["buttonClicked"]["reportedTime"]
     # dateClicked = getISOTimeAsDate(reportedTime).strftime("%Y_%d_%m")
-    dateClicked =  datetime.now().strftime("%Y_%d_%m")
+
+    
+    tzCST = pytz.timezone('US/Central')
+    dateClicked =  datetime.now(tzCST).strftime("%Y_%d_%m")
     deviceInfo = event["deviceInfo"]
     placementInfo = event["placementInfo"]
     projectName = "OneClick"
@@ -35,16 +40,17 @@ def handler(event: any, context: any):
             clickType=clickType,
             action=action, 
             deviceInfo=deviceInfo,
-            placementInfo=placementInfo
+            placementInfo=placementInfo,
+            timestamp=decimal.Decimal(datetime.now(tzCST).timestamp())
         )
 
 
     try: 
         clicky.save_click(click_to_save)
-        if action == 'START':
+        if action == 'START' or action == "RESET_START":
             bulby.turn_on("shiny")
             bulby.turn_on("home_office")
-        elif action == 'STOP':
+        elif action == 'STOP' or action == "RESET_STOP":
             bulby.turn_off("shiny")
             bulby.turn_off("home_office")
     except Exception as ex:
@@ -98,16 +104,22 @@ def get_next_action(project: str, dateClicked: str, clickType: str):
     action_dict = dict(START='STOP', STOP='START', NONE='START')
     todays_clicks = clicky.get_clicks_for_day(project, dateClicked)
     print("List of clicks", todays_clicks)
+    filterType = "SINGLE" if clickType == "LONG" else clickType
     if todays_clicks == None or len(todays_clicks) == 0 \
-            or len (list(filter(lambda x: x["clickType"] == clickType, todays_clicks))) == 0:
+            or len (list(filter(lambda x: x["clickType"] == filterType, todays_clicks))) == 0:
         print("No clicks - start session")
         return "START"   
     last_click = sorted(
-        filter(lambda x: x["clickType"] == clickType, todays_clicks), 
+        filter(lambda x: x["clickType"] == filterType, todays_clicks), 
         key = lambda i: getISOTimeAsDate( i['reportedTime'] ),
         reverse=True)[0]
-    print("LAST CLICK: ", last_click)        
-    return action_dict.get(last_click.get("action", 'NONE'))
+    print("LAST CLICK: ", last_click) 
+    if clickType == "SINGLE":       
+        return action_dict.get(last_click.get("action", 'NONE'))
+    elif clickType == "LONG":
+        return "RESET_" + last_click.get("action", 'START')
+    else:
+        return "UNDEFINED"
 
 
 def getISOTimeAsDate(reportedTime: str):

@@ -15,7 +15,6 @@ def turn_on(device_name: str):
     print(config)
     device = next((stat for stat in devices if stat["name"] == device_name), None)
     API_ENDPOINT = "http://{}/apps/293/devices/{}/on?access_token={}".format(config.get("host"), device.get("id") ,config.get("token") )
-    print(API_ENDPOINT)
     response = requests.get(url = API_ENDPOINT)
     print("RESPONSE STATUS ON: %s"%response.status_code)
     print(f'Reponse => {response.text}')
@@ -31,7 +30,6 @@ def turn_off(device_name: str):
         set_color(device.get("id"), device.get("off_color"), config)
     else:        
         API_ENDPOINT = "http://{}/apps/293/devices/{}/off?access_token={}".format(config.get("host"), device.get("id") ,config.get("token") )
-        print(API_ENDPOINT)
         response = requests.get(url = API_ENDPOINT)
         print("RESPONSE STATUS OFF: %s"%response.status_code) 
 
