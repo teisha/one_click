@@ -21,7 +21,7 @@ def handler(event: any, context: any):
     # }
     clickType = event["deviceEvent"]["buttonClicked"]["clickType"]
     reportedTime = event["deviceEvent"]["buttonClicked"]["reportedTime"]
-    # dateClicked = getISOTimeAsDate(reportedTime).strftime("%Y_%d_%m")
+    # dateClicked = clicky.getISOTimeAsDate(reportedTime).strftime("%Y_%d_%m")
 
     
     tzCST = pytz.timezone('US/Central')
@@ -111,7 +111,7 @@ def get_next_action(project: str, dateClicked: str, clickType: str):
         return "START"   
     last_click = sorted(
         filter(lambda x: x["clickType"] == filterType, todays_clicks), 
-        key = lambda i: getISOTimeAsDate( i['reportedTime'] ),
+        key = lambda i: clicky.getISOTimeAsDate( i['reportedTime'] ),
         reverse=True)[0]
     print("LAST CLICK: ", last_click) 
     if clickType == "SINGLE":       
@@ -122,8 +122,7 @@ def get_next_action(project: str, dateClicked: str, clickType: str):
         return "UNDEFINED"
 
 
-def getISOTimeAsDate(reportedTime: str):
-    return datetime.fromisoformat(reportedTime.replace('Z',''))
+
 
 
 # https://developer.amazon.com/en-US/docs/alexa/smarthome/send-events-to-the-alexa-event-gateway.html

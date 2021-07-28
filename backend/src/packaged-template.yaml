@@ -142,7 +142,7 @@ Resources:
               - Ref: AWS::Region
               - Ref: AWS::AccountId
               - alias/*
-      CodeUri: s3://serverless-deploy-all-lsft-projects/3850eba5b95d096ab3a5d015b03f4061
+      CodeUri: s3://serverless-deploy-all-lsft-projects/cf12e3a269bcb82060c718f92fce18ae
 Outputs:
   TableName:
     Description: The name of the table holding click data

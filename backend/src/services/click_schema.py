@@ -7,6 +7,9 @@ import services.dynamodb_service as db
 service = db.DynamoService(os.environ["CLICK_TABLE"])
 pk_prefix = "CLICK"
 
+def getISOTimeAsDate(reportedTime: str):
+    return datetime.fromisoformat(reportedTime.replace('Z',''))
+
 def get_click_data(project: str, dateClicked: str, reportedTime: str):
     pk = "|".join([ pk_prefix, project, dateClicked ])
     result = service.get_data(pk, reportedTime)
