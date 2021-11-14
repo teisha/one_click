@@ -4,8 +4,8 @@ import services.ssm_service as ssm
 
 # Move to dynamo
 devices=[
-    dict(name="shiny", id="103", on_color="setHue/33", off_color="setHue/99"),
-    dict(name="home_office", id="74")
+    dict(name="shiny", id="103", on_color=["setHue/33","setSaturation/100","setLevel/100"], off_color=["setHue/99","setSaturation/100","setLevel/100"]),
+    dict(name="home_office", id="269", on_color=["setHue/0","setSaturation/0","setLevel/100"])
 ]
 
 
@@ -20,14 +20,16 @@ def turn_on(device_name: str):
     print(f'Reponse => {response.text}')
 
     if device.get("on_color", None) != None:
-        set_color(device.get("id"), device.get("on_color"), config)
-    set_level(device.get("id"), "85", config)
+        set_cmd(device.get("id"), device.get("on_color"), config)
+    else:
+        set_level(device.get("id"), "85", config)
+
 
 def turn_off(device_name: str):
     config = json.loads(ssm.get_ssm_parameter(os.environ["SECRET_PARAM"]) )
     device = next((stat for stat in devices if stat["name"] == device_name), None)
     if device.get("off_color", None) != None:
-        set_color(device.get("id"), device.get("off_color"), config)
+        set_cmd(device.get("id"), device.get("off_color"), config)
     else:        
         API_ENDPOINT = "http://{}/apps/293/devices/{}/off?access_token={}".format(config.get("host"), device.get("id") ,config.get("token") )
         response = requests.get(url = API_ENDPOINT)
@@ -38,11 +40,12 @@ def set_level(device_id: str, level_val: str, config: dict):
     response = requests.get(url = API_ENDPOINT)
     print("RESPONSE STATUS LEVEL: %s"%response.status_code)
 
-def set_color(device_id: str, color_val: str, config: dict):
-    API_ENDPOINT = "http://{}/apps/293/devices/{}/{}?access_token={}".format(config.get("host"), device_id , color_val, config.get("token") )
+def set_cmd(device_id: str, cmdList: [], config: dict):
+    for setter_cmd in cmdList:
+        API_ENDPOINT = "http://{}/apps/293/devices/{}/{}?access_token={}".format(config.get("host"), device_id , setter_cmd, config.get("token") )
 
-    response = requests.get(url = API_ENDPOINT)
-    print("RESPONSE STATUS COLOR: %s"%response.status_code)    
+        response = requests.get(url = API_ENDPOINT)
+        print("RESPONSE STATUS COLOR: %s"%response.status_code)    
 
  
 
