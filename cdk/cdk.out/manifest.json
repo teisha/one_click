@@ -1,0 +1,174 @@
+{
+  "version": "21.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "IOTBackendStackdev.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "IOTBackendStackdev.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "IOTBackendStackdev": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://001668627821/us-east-1",
+      "properties": {
+        "templateFile": "IOTBackendStackdev.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::001668627821:role/cdk-hnb659fds-deploy-role-001668627821-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::001668627821:role/cdk-hnb659fds-cfn-exec-role-001668627821-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-001668627821-us-east-1/44b8b5cb0d8d35a6245128713fb7abbb6b3f2e21597e3cbff7eb9eafe02b1a1a.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "IOTBackendStackdev.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::001668627821:role/cdk-hnb659fds-lookup-role-001668627821-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "IOTBackendStackdev.assets"
+      ],
+      "metadata": {
+        "/IOTBackendStackdev/IotClickTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "IotClickTableC6243485"
+            }
+          }
+        ],
+        "/IOTBackendStackdev/IotClickTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IotClickTableC6243485"
+          }
+        ],
+        "/IOTBackendStackdev/HubitatParameter/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HubitatParameterDFA2F017"
+          }
+        ],
+        "/IOTBackendStackdev/ParameterPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ParameterPolicyC4F49230"
+          }
+        ],
+        "/IOTBackendStackdev/ClickLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClickLambdaServiceRoleCEFE0B37"
+          }
+        ],
+        "/IOTBackendStackdev/ClickLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClickLambda0ABE231F"
+          }
+        ],
+        "/IOTBackendStackdev/executionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "executionRole2F5D1D4F"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApi0DA777A7"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApiCloudWatchRoleDA161526"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApiAccount01AC92D5"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApiDeployment9740E5F89aa5622866c3b7ccf19d7c15fbb8b639"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/DeploymentStage.dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApiDeploymentStagedev94953B8E"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApiEndpointCACF853F"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClick9A834B07"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickGETApiPermissionIOTBackendStackdevbuttonClickApi23F51684GETbuttonClick61B93136"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickGETApiPermissionTestIOTBackendStackdevbuttonClickApi23F51684GETbuttonClick004CE1F9"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickGET466EA43C"
+          }
+        ],
+        "/IOTBackendStackdev/APIGatewayURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APIGatewayURL"
+          }
+        ],
+        "/IOTBackendStackdev/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/IOTBackendStackdev/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/IOTBackendStackdev/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "IOTBackendStackdev"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/mnt/c/git/mailSort/adminApp/cdk/tests/sender_uploader/importEmailsToDynamo.test.ts">
+    <testCase name="ImportEmailsToDynamo handler reads the file and adds the emails to the table" duration="82653"/>
+  </file>
+</testExecutions>

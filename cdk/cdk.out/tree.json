@@ -1,0 +1,813 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.1.137"
+        }
+      },
+      "IOTBackendStackdev": {
+        "id": "IOTBackendStackdev",
+        "path": "IOTBackendStackdev",
+        "children": {
+          "IotClickTable": {
+            "id": "IotClickTable",
+            "path": "IOTBackendStackdev/IotClickTable",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IOTBackendStackdev/IotClickTable/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "keySchema": [
+                      {
+                        "attributeName": "pk",
+                        "keyType": "HASH"
+                      },
+                      {
+                        "attributeName": "sk",
+                        "keyType": "RANGE"
+                      }
+                    ],
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "pk",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "sk",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "start",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "billingMode": "PAY_PER_REQUEST",
+                    "globalSecondaryIndexes": [
+                      {
+                        "indexName": "GSI1",
+                        "keySchema": [
+                          {
+                            "attributeName": "sk",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "pk",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      },
+                      {
+                        "indexName": "startIndex",
+                        "keySchema": [
+                          {
+                            "attributeName": "start",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "pk",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      }
+                    ],
+                    "streamSpecification": {
+                      "streamViewType": "NEW_IMAGE"
+                    },
+                    "tableName": "IOTClicks_dev",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "OneClick"
+                      }
+                    ],
+                    "timeToLiveSpecification": {
+                      "attributeName": "TTL",
+                      "enabled": true
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
+                  "version": "2.47.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "IOTBackendStackdev/IotClickTable/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.47.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "version": "2.47.0"
+            }
+          },
+          "SourceBucket": {
+            "id": "SourceBucket",
+            "path": "IOTBackendStackdev/SourceBucket",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+              "version": "2.47.0"
+            }
+          },
+          "HubitatParameter": {
+            "id": "HubitatParameter",
+            "path": "IOTBackendStackdev/HubitatParameter",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IOTBackendStackdev/HubitatParameter/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "non-Secure-string",
+                    "description": "SSM Parameter for call to IOT Manager",
+                    "name": "/OneClick/dev/Hubitat",
+                    "tags": {
+                      "Environment": "dev",
+                      "Project": "OneClick"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
+                  "version": "2.47.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
+              "version": "2.47.0"
+            }
+          },
+          "ParameterPolicy": {
+            "id": "ParameterPolicy",
+            "path": "IOTBackendStackdev/ParameterPolicy",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IOTBackendStackdev/ParameterPolicy/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                  "aws:cdk:cloudformation:props": {
+                    "policyDocument": {
+                      "Statement": [
+                        {
+                          "Action": [
+                            "ssm:GetParameter",
+                            "ssm:PutParameter"
+                          ],
+                          "Effect": "Allow",
+                          "Resource": {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":ssm:us-east-1:001668627821:parameter",
+                                {
+                                  "Ref": "HubitatParameterDFA2F017"
+                                }
+                              ]
+                            ]
+                          }
+                        },
+                        {
+                          "Action": "ssm:DescribeParameters",
+                          "Effect": "Allow",
+                          "Resource": "*"
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "policyName": "ParameterPolicyC4F49230",
+                    "roles": [
+                      {
+                        "Ref": "ClickLambdaServiceRoleCEFE0B37"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                  "version": "2.47.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Policy",
+              "version": "2.47.0"
+            }
+          },
+          "ClickLambda": {
+            "id": "ClickLambda",
+            "path": "IOTBackendStackdev/ClickLambda",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "IOTBackendStackdev/ClickLambda/ServiceRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "IOTBackendStackdev/ClickLambda/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.47.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.47.0"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "IOTBackendStackdev/ClickLambda/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "IOTBackendStackdev/ClickLambda/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.47.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "IOTBackendStackdev/ClickLambda/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.47.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.47.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "IOTBackendStackdev/ClickLambda/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-001668627821-us-east-1",
+                      "s3Key": "3bc711424ed0b0575d8ecd3b7b8b87417e9fc993b8bf4a2ab8c7f0b6ed9cf714.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "ClickLambdaServiceRoleCEFE0B37",
+                        "Arn"
+                      ]
+                    },
+                    "environment": {
+                      "variables": {
+                        "LOGGING_LEVEL": "DEBUG",
+                        "CLICK_TABLE": {
+                          "Ref": "IotClickTableC6243485"
+                        },
+                        "SECRET_PARAM": {
+                          "Ref": "HubitatParameterDFA2F017"
+                        },
+                        "SINGLE_CLICK": "48a74731-3b5f-4acd-b7f2-1e1c707c1c39",
+                        "DOUBLE_CLICK": "941967c0-26cc-4b3a-a36c-99b85e2ad568",
+                        "HOLD": "d902d1cd-784f-4bce-b1e7-36c1dc603d9d"
+                      }
+                    },
+                    "handler": "index.handler",
+                    "runtime": "python3.9"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.47.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-lambda-python-alpha.PythonFunction",
+              "version": "2.47.0-alpha.0"
+            }
+          },
+          "executionRole": {
+            "id": "executionRole",
+            "path": "IOTBackendStackdev/executionRole",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IOTBackendStackdev/executionRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                  "aws:cdk:cloudformation:props": {
+                    "policyDocument": {
+                      "Statement": [
+                        {
+                          "Action": [
+                            "s3:GetObject",
+                            "s3:ListBucket"
+                          ],
+                          "Effect": "Allow",
+                          "Resource": [
+                            {
+                              "Fn::Join": [
+                                "",
+                                [
+                                  "arn:",
+                                  {
+                                    "Ref": "AWS::Partition"
+                                  },
+                                  ":s3:::lsft-athena-investigations"
+                                ]
+                              ]
+                            },
+                            {
+                              "Fn::Join": [
+                                "/",
+                                [
+                                  {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":s3:::lsft-athena-investigations"
+                                      ]
+                                    ]
+                                  },
+                                  "*"
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "Action": [
+                            "dynamodb:DeleteItem",
+                            "dynamodb:GetItem",
+                            "dynamodb:GetRecords",
+                            "dynamodb:PutItem",
+                            "dynamodb:Query",
+                            "dynamodb:UpdateItem"
+                          ],
+                          "Effect": "Allow",
+                          "Resource": {
+                            "Fn::GetAtt": [
+                              "IotClickTableC6243485",
+                              "Arn"
+                            ]
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "policyName": "executionRole2F5D1D4F",
+                    "roles": [
+                      {
+                        "Ref": "ClickLambdaServiceRoleCEFE0B37"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                  "version": "2.47.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Policy",
+              "version": "2.47.0"
+            }
+          },
+          "buttonClickApi": {
+            "id": "buttonClickApi",
+            "path": "IOTBackendStackdev/buttonClickApi",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IOTBackendStackdev/buttonClickApi/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "buttonClickApi"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnRestApi",
+                  "version": "2.47.0"
+                }
+              },
+              "CloudWatchRole": {
+                "id": "CloudWatchRole",
+                "path": "IOTBackendStackdev/buttonClickApi/CloudWatchRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "IOTBackendStackdev/buttonClickApi/CloudWatchRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "apigateway.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.47.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.47.0"
+                }
+              },
+              "Account": {
+                "id": "Account",
+                "path": "IOTBackendStackdev/buttonClickApi/Account",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Account",
+                  "aws:cdk:cloudformation:props": {
+                    "cloudWatchRoleArn": {
+                      "Fn::GetAtt": [
+                        "buttonClickApiCloudWatchRoleDA161526",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnAccount",
+                  "version": "2.47.0"
+                }
+              },
+              "Deployment": {
+                "id": "Deployment",
+                "path": "IOTBackendStackdev/buttonClickApi/Deployment",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "IOTBackendStackdev/buttonClickApi/Deployment/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
+                      "aws:cdk:cloudformation:props": {
+                        "restApiId": {
+                          "Ref": "buttonClickApi0DA777A7"
+                        },
+                        "description": "Automatically created by the RestApi construct"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnDeployment",
+                      "version": "2.47.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Deployment",
+                  "version": "2.47.0"
+                }
+              },
+              "DeploymentStage.dev": {
+                "id": "DeploymentStage.dev",
+                "path": "IOTBackendStackdev/buttonClickApi/DeploymentStage.dev",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "IOTBackendStackdev/buttonClickApi/DeploymentStage.dev/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
+                      "aws:cdk:cloudformation:props": {
+                        "restApiId": {
+                          "Ref": "buttonClickApi0DA777A7"
+                        },
+                        "deploymentId": {
+                          "Ref": "buttonClickApiDeployment9740E5F89aa5622866c3b7ccf19d7c15fbb8b639"
+                        },
+                        "stageName": "dev"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnStage",
+                      "version": "2.47.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Stage",
+                  "version": "2.47.0"
+                }
+              },
+              "Endpoint": {
+                "id": "Endpoint",
+                "path": "IOTBackendStackdev/buttonClickApi/Endpoint",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.47.0"
+                }
+              },
+              "Default": {
+                "id": "Default",
+                "path": "IOTBackendStackdev/buttonClickApi/Default",
+                "children": {
+                  "buttonClick": {
+                    "id": "buttonClick",
+                    "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                          "aws:cdk:cloudformation:props": {
+                            "parentId": {
+                              "Fn::GetAtt": [
+                                "buttonClickApi0DA777A7",
+                                "RootResourceId"
+                              ]
+                            },
+                            "pathPart": "buttonClick",
+                            "restApiId": {
+                              "Ref": "buttonClickApi0DA777A7"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                          "version": "2.47.0"
+                        }
+                      },
+                      "GET": {
+                        "id": "GET",
+                        "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET",
+                        "children": {
+                          "ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": {
+                            "id": "ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "ClickLambda0ABE231F",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:",
+                                      {
+                                        "Ref": "AWS::Partition"
+                                      },
+                                      ":execute-api:us-east-1:001668627821:",
+                                      {
+                                        "Ref": "buttonClickApi0DA777A7"
+                                      },
+                                      "/",
+                                      {
+                                        "Ref": "buttonClickApiDeploymentStagedev94953B8E"
+                                      },
+                                      "/GET/buttonClick"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.47.0"
+                            }
+                          },
+                          "ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": {
+                            "id": "ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "ClickLambda0ABE231F",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "apigateway.amazonaws.com",
+                                "sourceArn": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:",
+                                      {
+                                        "Ref": "AWS::Partition"
+                                      },
+                                      ":execute-api:us-east-1:001668627821:",
+                                      {
+                                        "Ref": "buttonClickApi0DA777A7"
+                                      },
+                                      "/test-invoke-stage/GET/buttonClick"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                              "version": "2.47.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "httpMethod": "GET",
+                                "resourceId": {
+                                  "Ref": "buttonClickApibuttonClick9A834B07"
+                                },
+                                "restApiId": {
+                                  "Ref": "buttonClickApi0DA777A7"
+                                },
+                                "authorizationType": "NONE",
+                                "integration": {
+                                  "type": "AWS_PROXY",
+                                  "uri": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+                                        {
+                                          "Fn::GetAtt": [
+                                            "ClickLambda0ABE231F",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "/invocations"
+                                      ]
+                                    ]
+                                  },
+                                  "integrationHttpMethod": "POST"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.47.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.47.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                      "version": "2.47.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.ResourceBase",
+                  "version": "2.47.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_apigateway.RestApi",
+              "version": "2.47.0"
+            }
+          },
+          "APIGatewayURL": {
+            "id": "APIGatewayURL",
+            "path": "IOTBackendStackdev/APIGatewayURL",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.47.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "IOTBackendStackdev/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "IOTBackendStackdev/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.47.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.137"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.47.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.47.0"
+    }
+  }
+}
