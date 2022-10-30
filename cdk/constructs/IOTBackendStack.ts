@@ -10,7 +10,7 @@ import path from 'path';
 import { AttributeType, BillingMode, ProjectionType, StreamViewType, Table, TableAttributes } from 'aws-cdk-lib/aws-dynamodb';
 // import { Role, ServicePrincipal, ManagedPolicy } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
-import { Effect } from 'aws-cdk-lib/aws-iam';
+import { Effect, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Aws, CfnOutput, Fn } from 'aws-cdk-lib';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 
@@ -120,10 +120,11 @@ export class IOTBackendStack extends cdk.Stack {
       const clickLambda = new pylambda.PythonFunction(this, 'ClickLambda', {
         entry: '../backend/src',
         runtime: Runtime.PYTHON_3_9,
+        timeout:  cdk.Duration.minutes(5),
         // index:   // needs a file named index.py
         // handler:  // defaults to handler
         environment: {
-          "LOGGING_LEVEL": "DEBUG",
+          "LOGGING_LEVEL": "INFO",
           "CLICK_TABLE": iotClickTable.tableName,
           "SECRET_PARAM": hubitatParameter.parameterName,
           "SINGLE_CLICK": "48a74731-3b5f-4acd-b7f2-1e1c707c1c39",
@@ -141,16 +142,49 @@ export class IOTBackendStack extends cdk.Stack {
 
 
 
-
+      // const logGroup = new logs.LogGroup(api, 'ApiAccessLogs', {
+      //     retention: 90, // Keep logs for 90 days
+      // });
       /* create an API */
       const buttonClickApiGateway = new apigw.RestApi(this, 'buttonClickApi', {
-        deployOptions: {stageName: props.stage}
+        deployOptions: {
+          stageName: props.stage
+        }, 
+        defaultCorsPreflightOptions: {
+          allowHeaders: [
+            'Content-Type',
+            'X-Amz-Date',
+            'Authorization',
+            'X-Api-Key',
+          ],
+          allowMethods: ['OPTIONS','GET','POST'],
+          allowCredentials: true,
+          allowOrigins: ['http://98.44.205.136'],
+        }   
       })
-
+// curl -L -X GET 'https://apwae7ot0f.execute-api.us-east-1.amazonaws.com/dev/buttonClick/workbutton/48a74731-3b5f-4acd-b7f2-1e1c707c1c39'
+// Double
+// curl -L -X GET 'https://apwae7ot0f.execute-api.us-east-1.amazonaws.com/dev/buttonClick/workbutton/941967c0-26cc-4b3a-a36c-99b85e2ad568'
+// HOLD
+// curl -L -X GET 'https://apwae7ot0f.execute-api.us-east-1.amazonaws.com/dev//buttonClick/workbutton/d902d1cd-784f-4bce-b1e7-36c1dc603d9d'
+// {"message":"Missing Authentication Token"}
+// AmazonAPIGatewayPushToCloudWatchLogs 
+//
  
+// aws lambda add-permission --function-name arn:aws:lambda:XXXXXX:your-lambda-function-name --source-arn arn:aws:execute-api:us-east-1:YOUR_ACCOUNT_ID:api_id/*/HTTP_METHOD/resource --principal apigateway.amazonaws.com --statement-id apigateway-access --action lambda:InvokeFunction
+      clickLambda.addPermission("PermitAPIGatewayExecute", {
+        principal: new ServicePrincipal("apigateway.amazonaws.com"),
+        sourceArn: buttonClickApiGateway.arnForExecuteApi('*')
+      })
+       
       /* add a resource to the API and a method to the resource */
       const buttonClick = buttonClickApiGateway.root.addResource('buttonClick');
-      buttonClick.addMethod('GET', new apigw.LambdaIntegration(clickLambda));
+      buttonClick.addMethod('GET')
+      const buttonType = buttonClick.addResource('{buttonType}');
+      buttonType.addMethod('GET')
+      const clickType = buttonType.addResource('{clickType}')
+      clickType.addMethod('GET', new apigw.LambdaIntegration(clickLambda));
+
       
       new CfnOutput(this, 'APIGatewayURL', {value: buttonClickApiGateway.url})
       // const authorizer = new HttpLambdaAuthorizer('BooksAuthorizer', authHandler, {

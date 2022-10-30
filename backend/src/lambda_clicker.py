@@ -105,18 +105,29 @@ def get_next_action(project: str, dateClicked: str, clickType: str):
     todays_clicks = clicky.get_clicks_for_day(project, dateClicked)
     print("List of clicks", todays_clicks)
     filterType = "SINGLE" if clickType == "LONG" else clickType
+
+    # This was only handling single clicks for the OneClick project
+    # Switching to hubitat - rules become: 
+    #   SINGLE = Start
+    #   DOUBLE = Stop
+    #   LONG = Reset last status
+    if clickType == "SINGLE":
+        return "START"
+    if clickType == "DOUBLE":
+        return "STOP"
+
     if todays_clicks == None or len(todays_clicks) == 0 \
             or len (list(filter(lambda x: x["clickType"] == filterType, todays_clicks))) == 0:
         print("No clicks - start session")
-        return "START"   
+        return "START"
     last_click = sorted(
         filter(lambda x: x["clickType"] == filterType, todays_clicks), 
         key = lambda i: clicky.getISOTimeAsDate( i['reportedTime'] ),
         reverse=True)[0]
     print("LAST CLICK: ", last_click) 
-    if clickType == "SINGLE":       
-        return action_dict.get(last_click.get("action", 'NONE'))
-    elif clickType == "LONG":
+    # if clickType == "SINGLE":       
+    #     return action_dict.get(last_click.get("action", 'NONE'))
+    if clickType == "LONG":
         return "RESET_" + last_click.get("action", 'START')
     else:
         return "UNDEFINED"

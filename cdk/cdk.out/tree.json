@@ -311,7 +311,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-001668627821-us-east-1",
-                      "s3Key": "3bc711424ed0b0575d8ecd3b7b8b87417e9fc993b8bf4a2ab8c7f0b6ed9cf714.zip"
+                      "s3Key": "18c02e6d113f48334b59833791e70f4487af48f0eedb2539f40034765409b7b2.zip"
                     },
                     "role": {
                       "Fn::GetAtt": [
@@ -321,7 +321,7 @@
                     },
                     "environment": {
                       "variables": {
-                        "LOGGING_LEVEL": "DEBUG",
+                        "LOGGING_LEVEL": "INFO",
                         "CLICK_TABLE": {
                           "Ref": "IotClickTableC6243485"
                         },
@@ -334,11 +334,49 @@
                       }
                     },
                     "handler": "index.handler",
-                    "runtime": "python3.9"
+                    "runtime": "python3.9",
+                    "timeout": 300
                   }
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.47.0"
+                }
+              },
+              "PermitAPIGatewayExecute": {
+                "id": "PermitAPIGatewayExecute",
+                "path": "IOTBackendStackdev/ClickLambda/PermitAPIGatewayExecute",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                  "aws:cdk:cloudformation:props": {
+                    "action": "lambda:InvokeFunction",
+                    "functionName": {
+                      "Fn::GetAtt": [
+                        "ClickLambda0ABE231F",
+                        "Arn"
+                      ]
+                    },
+                    "principal": "apigateway.amazonaws.com",
+                    "sourceArn": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition"
+                          },
+                          ":execute-api:us-east-1:001668627821:",
+                          {
+                            "Ref": "buttonClickApi0DA777A7"
+                          },
+                          "/*/*/*"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
                   "version": "2.47.0"
                 }
               }
@@ -567,7 +605,7 @@
                           "Ref": "buttonClickApi0DA777A7"
                         },
                         "deploymentId": {
-                          "Ref": "buttonClickApiDeployment9740E5F89aa5622866c3b7ccf19d7c15fbb8b639"
+                          "Ref": "buttonClickApiDeployment9740E5F86f07f55e1eac0629842d83260067c960"
                         },
                         "stageName": "dev"
                       }
@@ -595,6 +633,70 @@
                 "id": "Default",
                 "path": "IOTBackendStackdev/buttonClickApi/Default",
                 "children": {
+                  "OPTIONS": {
+                    "id": "OPTIONS",
+                    "path": "IOTBackendStackdev/buttonClickApi/Default/OPTIONS",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "IOTBackendStackdev/buttonClickApi/Default/OPTIONS/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                          "aws:cdk:cloudformation:props": {
+                            "httpMethod": "OPTIONS",
+                            "resourceId": {
+                              "Fn::GetAtt": [
+                                "buttonClickApi0DA777A7",
+                                "RootResourceId"
+                              ]
+                            },
+                            "restApiId": {
+                              "Ref": "buttonClickApi0DA777A7"
+                            },
+                            "authorizationType": "NONE",
+                            "integration": {
+                              "type": "MOCK",
+                              "requestTemplates": {
+                                "application/json": "{ statusCode: 200 }"
+                              },
+                              "integrationResponses": [
+                                {
+                                  "statusCode": "204",
+                                  "responseParameters": {
+                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                    "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+                                    "method.response.header.Vary": "'Origin'",
+                                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+                                    "method.response.header.Access-Control-Allow-Credentials": "'true'"
+                                  }
+                                }
+                              ]
+                            },
+                            "methodResponses": [
+                              {
+                                "statusCode": "204",
+                                "responseParameters": {
+                                  "method.response.header.Access-Control-Allow-Headers": true,
+                                  "method.response.header.Access-Control-Allow-Origin": true,
+                                  "method.response.header.Vary": true,
+                                  "method.response.header.Access-Control-Allow-Methods": true,
+                                  "method.response.header.Access-Control-Allow-Credentials": true
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                          "version": "2.47.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                      "version": "2.47.0"
+                    }
+                  },
                   "buttonClick": {
                     "id": "buttonClick",
                     "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick",
@@ -622,88 +724,71 @@
                           "version": "2.47.0"
                         }
                       },
+                      "OPTIONS": {
+                        "id": "OPTIONS",
+                        "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/OPTIONS",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/OPTIONS/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "httpMethod": "OPTIONS",
+                                "resourceId": {
+                                  "Ref": "buttonClickApibuttonClick9A834B07"
+                                },
+                                "restApiId": {
+                                  "Ref": "buttonClickApi0DA777A7"
+                                },
+                                "authorizationType": "NONE",
+                                "integration": {
+                                  "type": "MOCK",
+                                  "requestTemplates": {
+                                    "application/json": "{ statusCode: 200 }"
+                                  },
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "204",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                        "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+                                        "method.response.header.Vary": "'Origin'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+                                        "method.response.header.Access-Control-Allow-Credentials": "'true'"
+                                      }
+                                    }
+                                  ]
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "204",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Vary": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true,
+                                      "method.response.header.Access-Control-Allow-Credentials": true
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.47.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.47.0"
+                        }
+                      },
                       "GET": {
                         "id": "GET",
                         "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET",
                         "children": {
-                          "ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": {
-                            "id": "ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
-                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
-                              "aws:cdk:cloudformation:props": {
-                                "action": "lambda:InvokeFunction",
-                                "functionName": {
-                                  "Fn::GetAtt": [
-                                    "ClickLambda0ABE231F",
-                                    "Arn"
-                                  ]
-                                },
-                                "principal": "apigateway.amazonaws.com",
-                                "sourceArn": {
-                                  "Fn::Join": [
-                                    "",
-                                    [
-                                      "arn:",
-                                      {
-                                        "Ref": "AWS::Partition"
-                                      },
-                                      ":execute-api:us-east-1:001668627821:",
-                                      {
-                                        "Ref": "buttonClickApi0DA777A7"
-                                      },
-                                      "/",
-                                      {
-                                        "Ref": "buttonClickApiDeploymentStagedev94953B8E"
-                                      },
-                                      "/GET/buttonClick"
-                                    ]
-                                  ]
-                                }
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
-                              "version": "2.47.0"
-                            }
-                          },
-                          "ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": {
-                            "id": "ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
-                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
-                              "aws:cdk:cloudformation:props": {
-                                "action": "lambda:InvokeFunction",
-                                "functionName": {
-                                  "Fn::GetAtt": [
-                                    "ClickLambda0ABE231F",
-                                    "Arn"
-                                  ]
-                                },
-                                "principal": "apigateway.amazonaws.com",
-                                "sourceArn": {
-                                  "Fn::Join": [
-                                    "",
-                                    [
-                                      "arn:",
-                                      {
-                                        "Ref": "AWS::Partition"
-                                      },
-                                      ":execute-api:us-east-1:001668627821:",
-                                      {
-                                        "Ref": "buttonClickApi0DA777A7"
-                                      },
-                                      "/test-invoke-stage/GET/buttonClick"
-                                    ]
-                                  ]
-                                }
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
-                              "version": "2.47.0"
-                            }
-                          },
                           "Resource": {
                             "id": "Resource",
                             "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/Resource",
@@ -719,27 +804,7 @@
                                 },
                                 "authorizationType": "NONE",
                                 "integration": {
-                                  "type": "AWS_PROXY",
-                                  "uri": {
-                                    "Fn::Join": [
-                                      "",
-                                      [
-                                        "arn:",
-                                        {
-                                          "Ref": "AWS::Partition"
-                                        },
-                                        ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
-                                        {
-                                          "Fn::GetAtt": [
-                                            "ClickLambda0ABE231F",
-                                            "Arn"
-                                          ]
-                                        },
-                                        "/invocations"
-                                      ]
-                                    ]
-                                  },
-                                  "integrationHttpMethod": "POST"
+                                  "type": "MOCK"
                                 }
                               }
                             },
@@ -751,6 +816,354 @@
                         },
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.47.0"
+                        }
+                      },
+                      "{buttonType}": {
+                        "id": "{buttonType}",
+                        "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Ref": "buttonClickApibuttonClick9A834B07"
+                                },
+                                "pathPart": "{buttonType}",
+                                "restApiId": {
+                                  "Ref": "buttonClickApi0DA777A7"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.47.0"
+                            }
+                          },
+                          "OPTIONS": {
+                            "id": "OPTIONS",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/OPTIONS",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/OPTIONS/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "httpMethod": "OPTIONS",
+                                    "resourceId": {
+                                      "Ref": "buttonClickApibuttonClickbuttonType2E3A8CB7"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "buttonClickApi0DA777A7"
+                                    },
+                                    "authorizationType": "NONE",
+                                    "integration": {
+                                      "type": "MOCK",
+                                      "requestTemplates": {
+                                        "application/json": "{ statusCode: 200 }"
+                                      },
+                                      "integrationResponses": [
+                                        {
+                                          "statusCode": "204",
+                                          "responseParameters": {
+                                            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                            "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+                                            "method.response.header.Vary": "'Origin'",
+                                            "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+                                            "method.response.header.Access-Control-Allow-Credentials": "'true'"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "methodResponses": [
+                                      {
+                                        "statusCode": "204",
+                                        "responseParameters": {
+                                          "method.response.header.Access-Control-Allow-Headers": true,
+                                          "method.response.header.Access-Control-Allow-Origin": true,
+                                          "method.response.header.Vary": true,
+                                          "method.response.header.Access-Control-Allow-Methods": true,
+                                          "method.response.header.Access-Control-Allow-Credentials": true
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.47.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.47.0"
+                            }
+                          },
+                          "GET": {
+                            "id": "GET",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/GET",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/GET/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "httpMethod": "GET",
+                                    "resourceId": {
+                                      "Ref": "buttonClickApibuttonClickbuttonType2E3A8CB7"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "buttonClickApi0DA777A7"
+                                    },
+                                    "authorizationType": "NONE",
+                                    "integration": {
+                                      "type": "MOCK"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.47.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.47.0"
+                            }
+                          },
+                          "{clickType}": {
+                            "id": "{clickType}",
+                            "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                                  "aws:cdk:cloudformation:props": {
+                                    "parentId": {
+                                      "Ref": "buttonClickApibuttonClickbuttonType2E3A8CB7"
+                                    },
+                                    "pathPart": "{clickType}",
+                                    "restApiId": {
+                                      "Ref": "buttonClickApi0DA777A7"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                                  "version": "2.47.0"
+                                }
+                              },
+                              "OPTIONS": {
+                                "id": "OPTIONS",
+                                "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/OPTIONS",
+                                "children": {
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/OPTIONS/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                      "aws:cdk:cloudformation:props": {
+                                        "httpMethod": "OPTIONS",
+                                        "resourceId": {
+                                          "Ref": "buttonClickApibuttonClickbuttonTypeclickTypeA304D86C"
+                                        },
+                                        "restApiId": {
+                                          "Ref": "buttonClickApi0DA777A7"
+                                        },
+                                        "authorizationType": "NONE",
+                                        "integration": {
+                                          "type": "MOCK",
+                                          "requestTemplates": {
+                                            "application/json": "{ statusCode: 200 }"
+                                          },
+                                          "integrationResponses": [
+                                            {
+                                              "statusCode": "204",
+                                              "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+                                                "method.response.header.Vary": "'Origin'",
+                                                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+                                                "method.response.header.Access-Control-Allow-Credentials": "'true'"
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        "methodResponses": [
+                                          {
+                                            "statusCode": "204",
+                                            "responseParameters": {
+                                              "method.response.header.Access-Control-Allow-Headers": true,
+                                              "method.response.header.Access-Control-Allow-Origin": true,
+                                              "method.response.header.Vary": true,
+                                              "method.response.header.Access-Control-Allow-Methods": true,
+                                              "method.response.header.Access-Control-Allow-Credentials": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                      "version": "2.47.0"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                                  "version": "2.47.0"
+                                }
+                              },
+                              "GET": {
+                                "id": "GET",
+                                "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET",
+                                "children": {
+                                  "ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}": {
+                                    "id": "ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}",
+                                    "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                      "aws:cdk:cloudformation:props": {
+                                        "action": "lambda:InvokeFunction",
+                                        "functionName": {
+                                          "Fn::GetAtt": [
+                                            "ClickLambda0ABE231F",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "principal": "apigateway.amazonaws.com",
+                                        "sourceArn": {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              "arn:",
+                                              {
+                                                "Ref": "AWS::Partition"
+                                              },
+                                              ":execute-api:us-east-1:001668627821:",
+                                              {
+                                                "Ref": "buttonClickApi0DA777A7"
+                                              },
+                                              "/",
+                                              {
+                                                "Ref": "buttonClickApiDeploymentStagedev94953B8E"
+                                              },
+                                              "/GET/buttonClick/*/*"
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                      "version": "2.47.0"
+                                    }
+                                  },
+                                  "ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}": {
+                                    "id": "ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}",
+                                    "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                      "aws:cdk:cloudformation:props": {
+                                        "action": "lambda:InvokeFunction",
+                                        "functionName": {
+                                          "Fn::GetAtt": [
+                                            "ClickLambda0ABE231F",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "principal": "apigateway.amazonaws.com",
+                                        "sourceArn": {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              "arn:",
+                                              {
+                                                "Ref": "AWS::Partition"
+                                              },
+                                              ":execute-api:us-east-1:001668627821:",
+                                              {
+                                                "Ref": "buttonClickApi0DA777A7"
+                                              },
+                                              "/test-invoke-stage/GET/buttonClick/*/*"
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                      "version": "2.47.0"
+                                    }
+                                  },
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                      "aws:cdk:cloudformation:props": {
+                                        "httpMethod": "GET",
+                                        "resourceId": {
+                                          "Ref": "buttonClickApibuttonClickbuttonTypeclickTypeA304D86C"
+                                        },
+                                        "restApiId": {
+                                          "Ref": "buttonClickApi0DA777A7"
+                                        },
+                                        "authorizationType": "NONE",
+                                        "integration": {
+                                          "type": "AWS_PROXY",
+                                          "uri": {
+                                            "Fn::Join": [
+                                              "",
+                                              [
+                                                "arn:",
+                                                {
+                                                  "Ref": "AWS::Partition"
+                                                },
+                                                ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+                                                {
+                                                  "Fn::GetAtt": [
+                                                    "ClickLambda0ABE231F",
+                                                    "Arn"
+                                                  ]
+                                                },
+                                                "/invocations"
+                                              ]
+                                            ]
+                                          },
+                                          "integrationHttpMethod": "POST"
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                      "version": "2.47.0"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                                  "version": "2.47.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                              "version": "2.47.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
                           "version": "2.47.0"
                         }
                       }

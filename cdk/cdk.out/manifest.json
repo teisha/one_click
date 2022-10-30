@@ -23,7 +23,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::001668627821:role/cdk-hnb659fds-deploy-role-001668627821-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::001668627821:role/cdk-hnb659fds-cfn-exec-role-001668627821-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-001668627821-us-east-1/44b8b5cb0d8d35a6245128713fb7abbb6b3f2e21597e3cbff7eb9eafe02b1a1a.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-001668627821-us-east-1/65890181b70c23d3896dc17478343a0e15a27a982d5563938af73642d912a1ca.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -77,6 +77,12 @@
             "data": "ClickLambda0ABE231F"
           }
         ],
+        "/IOTBackendStackdev/ClickLambda/PermitAPIGatewayExecute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClickLambdaPermitAPIGatewayExecute9FA39826"
+          }
+        ],
         "/IOTBackendStackdev/executionRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -104,7 +110,7 @@
         "/IOTBackendStackdev/buttonClickApi/Deployment/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "buttonClickApiDeployment9740E5F89aa5622866c3b7ccf19d7c15fbb8b639"
+            "data": "buttonClickApiDeployment9740E5F86f07f55e1eac0629842d83260067c960"
           }
         ],
         "/IOTBackendStackdev/buttonClickApi/DeploymentStage.dev/Resource": [
@@ -119,28 +125,76 @@
             "data": "buttonClickApiEndpointCACF853F"
           }
         ],
+        "/IOTBackendStackdev/buttonClickApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApiOPTIONSAC0C40CB"
+          }
+        ],
         "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "buttonClickApibuttonClick9A834B07"
           }
         ],
-        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": [
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/OPTIONS/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "buttonClickApibuttonClickGETApiPermissionIOTBackendStackdevbuttonClickApi23F51684GETbuttonClick61B93136"
-          }
-        ],
-        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "buttonClickApibuttonClickGETApiPermissionTestIOTBackendStackdevbuttonClickApi23F51684GETbuttonClick004CE1F9"
+            "data": "buttonClickApibuttonClickOPTIONSBD8A0C85"
           }
         ],
         "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "buttonClickApibuttonClickGET466EA43C"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonType2E3A8CB7"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonTypeOPTIONS0F524D66"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonTypeGET74B23271"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonTypeclickTypeA304D86C"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonTypeclickTypeOPTIONS84F62A65"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonTypeclickTypeGETApiPermissionIOTBackendStackdevbuttonClickApi23F51684GETbuttonClickbuttonTypeclickType159DACF5"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonTypeclickTypeGETApiPermissionTestIOTBackendStackdevbuttonClickApi23F51684GETbuttonClickbuttonTypeclickType47360414"
+          }
+        ],
+        "/IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "buttonClickApibuttonClickbuttonTypeclickTypeGET50348323"
           }
         ],
         "/IOTBackendStackdev/APIGatewayURL": [

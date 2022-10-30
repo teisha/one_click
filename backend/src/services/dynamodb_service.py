@@ -22,7 +22,7 @@ class DynamoService:
             'pk': pk,
             'sk': sk
         }
-        print("ATTTRIBUTES")
+        # print("ATTTRIBUTES")
         for param, value in attributes.items():
             item.update({param: value}) 
         print("Add to dynamo:  item:{}".format(item))

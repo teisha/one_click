@@ -1,4 +1,5 @@
 import os, json, time
+from typing import List
 import requests
 import services.ssm_service as ssm
 
@@ -12,12 +13,12 @@ devices=[
 
 def turn_on(device_name: str):
     config = json.loads(ssm.get_ssm_parameter(os.environ["SECRET_PARAM"]) )
-    print(config)
+    # print(config)
     device = next((stat for stat in devices if stat["name"] == device_name), None)
     API_ENDPOINT = "http://{}/apps/293/devices/{}/on?access_token={}".format(config.get("host"), device.get("id") ,config.get("token") )
     response = requests.get(url = API_ENDPOINT)
-    print("RESPONSE STATUS ON: %s"%response.status_code)
-    print(f'Reponse => {response.text}')
+    print(f"RESPONSE STATUS ON {device_name}: {response.status_code}")
+    print(f'IOT Reponse => {response.text}')
 
     if device.get("on_color", None) != None:
         set_cmd(device.get("id"), device.get("on_color"), config)
@@ -33,19 +34,18 @@ def turn_off(device_name: str):
     else:        
         API_ENDPOINT = "http://{}/apps/293/devices/{}/off?access_token={}".format(config.get("host"), device.get("id") ,config.get("token") )
         response = requests.get(url = API_ENDPOINT)
-        print("RESPONSE STATUS OFF: %s"%response.status_code) 
+        print(f"RESPONSE STATUS OFF {device_name}: {response.status_code}") 
 
 def set_level(device_id: str, level_val: str, config: dict):
     API_ENDPOINT = "http://{}/apps/293/devices/{}/setLevel/{}?access_token={}".format(config.get("host"), device_id , level_val, config.get("token") )
     response = requests.get(url = API_ENDPOINT)
     print("RESPONSE STATUS LEVEL: %s"%response.status_code)
 
-def set_cmd(device_id: str, cmdList: [], config: dict):
+def set_cmd(device_id: str, cmdList: List[str], config: dict):
     for setter_cmd in cmdList:
         API_ENDPOINT = "http://{}/apps/293/devices/{}/{}?access_token={}".format(config.get("host"), device_id , setter_cmd, config.get("token") )
-
         response = requests.get(url = API_ENDPOINT)
-        print("RESPONSE STATUS COLOR: %s"%response.status_code)    
+        print(f"RESPONSE STATUS COLOR {setter_cmd}: {response.status_code}")    
 
  
 

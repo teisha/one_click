@@ -188,7 +188,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-001668627821-us-east-1",
-     "S3Key": "3bc711424ed0b0575d8ecd3b7b8b87417e9fc993b8bf4a2ab8c7f0b6ed9cf714.zip"
+     "S3Key": "18c02e6d113f48334b59833791e70f4487af48f0eedb2539f40034765409b7b2.zip"
     },
     "Role": {
      "Fn::GetAtt": [
@@ -198,7 +198,7 @@
     },
     "Environment": {
      "Variables": {
-      "LOGGING_LEVEL": "DEBUG",
+      "LOGGING_LEVEL": "INFO",
       "CLICK_TABLE": {
        "Ref": "IotClickTableC6243485"
       },
@@ -211,16 +211,49 @@
      }
     },
     "Handler": "index.handler",
-    "Runtime": "python3.9"
+    "Runtime": "python3.9",
+    "Timeout": 300
    },
    "DependsOn": [
     "ClickLambdaServiceRoleCEFE0B37"
    ],
    "Metadata": {
     "aws:cdk:path": "IOTBackendStackdev/ClickLambda/Resource",
-    "aws:asset:path": "asset.3bc711424ed0b0575d8ecd3b7b8b87417e9fc993b8bf4a2ab8c7f0b6ed9cf714",
+    "aws:asset:path": "asset.18c02e6d113f48334b59833791e70f4487af48f0eedb2539f40034765409b7b2",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
+   }
+  },
+  "ClickLambdaPermitAPIGatewayExecute9FA39826": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ClickLambda0ABE231F",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:001668627821:",
+       {
+        "Ref": "buttonClickApi0DA777A7"
+       },
+       "/*/*/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/ClickLambda/PermitAPIGatewayExecute"
    }
   },
   "executionRole2F5D1D4F": {
@@ -364,7 +397,7 @@
     "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Account"
    }
   },
-  "buttonClickApiDeployment9740E5F89aa5622866c3b7ccf19d7c15fbb8b639": {
+  "buttonClickApiDeployment9740E5F86f07f55e1eac0629842d83260067c960": {
    "Type": "AWS::ApiGateway::Deployment",
    "Properties": {
     "RestApiId": {
@@ -373,8 +406,16 @@
     "Description": "Automatically created by the RestApi construct"
    },
    "DependsOn": [
+    "buttonClickApibuttonClickbuttonTypeclickTypeGET50348323",
+    "buttonClickApibuttonClickbuttonTypeclickTypeOPTIONS84F62A65",
+    "buttonClickApibuttonClickbuttonTypeclickTypeA304D86C",
+    "buttonClickApibuttonClickbuttonTypeGET74B23271",
+    "buttonClickApibuttonClickbuttonTypeOPTIONS0F524D66",
+    "buttonClickApibuttonClickbuttonType2E3A8CB7",
     "buttonClickApibuttonClickGET466EA43C",
-    "buttonClickApibuttonClick9A834B07"
+    "buttonClickApibuttonClickOPTIONSBD8A0C85",
+    "buttonClickApibuttonClick9A834B07",
+    "buttonClickApiOPTIONSAC0C40CB"
    ],
    "Metadata": {
     "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Deployment/Resource"
@@ -387,7 +428,7 @@
      "Ref": "buttonClickApi0DA777A7"
     },
     "DeploymentId": {
-     "Ref": "buttonClickApiDeployment9740E5F89aa5622866c3b7ccf19d7c15fbb8b639"
+     "Ref": "buttonClickApiDeployment9740E5F86f07f55e1eac0629842d83260067c960"
     },
     "StageName": "dev"
    },
@@ -396,6 +437,55 @@
    ],
    "Metadata": {
     "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/DeploymentStage.dev/Resource"
+   }
+  },
+  "buttonClickApiOPTIONSAC0C40CB": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "HttpMethod": "OPTIONS",
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "buttonClickApi0DA777A7",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    },
+    "AuthorizationType": "NONE",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+        "method.response.header.Vary": "'Origin'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+        "method.response.header.Access-Control-Allow-Credentials": "'true'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Vary": true,
+       "method.response.header.Access-Control-Allow-Methods": true,
+       "method.response.header.Access-Control-Allow-Credentials": true
+      },
+      "StatusCode": "204"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/OPTIONS/Resource"
    }
   },
   "buttonClickApibuttonClick9A834B07": {
@@ -416,7 +506,213 @@
     "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/Resource"
    }
   },
-  "buttonClickApibuttonClickGETApiPermissionIOTBackendStackdevbuttonClickApi23F51684GETbuttonClick61B93136": {
+  "buttonClickApibuttonClickOPTIONSBD8A0C85": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "HttpMethod": "OPTIONS",
+    "ResourceId": {
+     "Ref": "buttonClickApibuttonClick9A834B07"
+    },
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    },
+    "AuthorizationType": "NONE",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+        "method.response.header.Vary": "'Origin'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+        "method.response.header.Access-Control-Allow-Credentials": "'true'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Vary": true,
+       "method.response.header.Access-Control-Allow-Methods": true,
+       "method.response.header.Access-Control-Allow-Credentials": true
+      },
+      "StatusCode": "204"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/OPTIONS/Resource"
+   }
+  },
+  "buttonClickApibuttonClickGET466EA43C": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "HttpMethod": "GET",
+    "ResourceId": {
+     "Ref": "buttonClickApibuttonClick9A834B07"
+    },
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    },
+    "AuthorizationType": "NONE",
+    "Integration": {
+     "Type": "MOCK"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/Resource"
+   }
+  },
+  "buttonClickApibuttonClickbuttonType2E3A8CB7": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "buttonClickApibuttonClick9A834B07"
+    },
+    "PathPart": "{buttonType}",
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/Resource"
+   }
+  },
+  "buttonClickApibuttonClickbuttonTypeOPTIONS0F524D66": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "HttpMethod": "OPTIONS",
+    "ResourceId": {
+     "Ref": "buttonClickApibuttonClickbuttonType2E3A8CB7"
+    },
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    },
+    "AuthorizationType": "NONE",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+        "method.response.header.Vary": "'Origin'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+        "method.response.header.Access-Control-Allow-Credentials": "'true'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Vary": true,
+       "method.response.header.Access-Control-Allow-Methods": true,
+       "method.response.header.Access-Control-Allow-Credentials": true
+      },
+      "StatusCode": "204"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/OPTIONS/Resource"
+   }
+  },
+  "buttonClickApibuttonClickbuttonTypeGET74B23271": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "HttpMethod": "GET",
+    "ResourceId": {
+     "Ref": "buttonClickApibuttonClickbuttonType2E3A8CB7"
+    },
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    },
+    "AuthorizationType": "NONE",
+    "Integration": {
+     "Type": "MOCK"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/GET/Resource"
+   }
+  },
+  "buttonClickApibuttonClickbuttonTypeclickTypeA304D86C": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "buttonClickApibuttonClickbuttonType2E3A8CB7"
+    },
+    "PathPart": "{clickType}",
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/Resource"
+   }
+  },
+  "buttonClickApibuttonClickbuttonTypeclickTypeOPTIONS84F62A65": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "HttpMethod": "OPTIONS",
+    "ResourceId": {
+     "Ref": "buttonClickApibuttonClickbuttonTypeclickTypeA304D86C"
+    },
+    "RestApiId": {
+     "Ref": "buttonClickApi0DA777A7"
+    },
+    "AuthorizationType": "NONE",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'http://98.44.205.136'",
+        "method.response.header.Vary": "'Origin'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+        "method.response.header.Access-Control-Allow-Credentials": "'true'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Vary": true,
+       "method.response.header.Access-Control-Allow-Methods": true,
+       "method.response.header.Access-Control-Allow-Credentials": true
+      },
+      "StatusCode": "204"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/OPTIONS/Resource"
+   }
+  },
+  "buttonClickApibuttonClickbuttonTypeclickTypeGETApiPermissionIOTBackendStackdevbuttonClickApi23F51684GETbuttonClickbuttonTypeclickType159DACF5": {
    "Type": "AWS::Lambda::Permission",
    "Properties": {
     "Action": "lambda:InvokeFunction",
@@ -443,16 +739,16 @@
        {
         "Ref": "buttonClickApiDeploymentStagedev94953B8E"
        },
-       "/GET/buttonClick"
+       "/GET/buttonClick/*/*"
       ]
      ]
     }
    },
    "Metadata": {
-    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick"
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/ApiPermission.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}"
    }
   },
-  "buttonClickApibuttonClickGETApiPermissionTestIOTBackendStackdevbuttonClickApi23F51684GETbuttonClick004CE1F9": {
+  "buttonClickApibuttonClickbuttonTypeclickTypeGETApiPermissionTestIOTBackendStackdevbuttonClickApi23F51684GETbuttonClickbuttonTypeclickType47360414": {
    "Type": "AWS::Lambda::Permission",
    "Properties": {
     "Action": "lambda:InvokeFunction",
@@ -475,21 +771,21 @@
        {
         "Ref": "buttonClickApi0DA777A7"
        },
-       "/test-invoke-stage/GET/buttonClick"
+       "/test-invoke-stage/GET/buttonClick/*/*"
       ]
      ]
     }
    },
    "Metadata": {
-    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick"
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/ApiPermission.Test.IOTBackendStackdevbuttonClickApi23F51684.GET..buttonClick.{buttonType}.{clickType}"
    }
   },
-  "buttonClickApibuttonClickGET466EA43C": {
+  "buttonClickApibuttonClickbuttonTypeclickTypeGET50348323": {
    "Type": "AWS::ApiGateway::Method",
    "Properties": {
     "HttpMethod": "GET",
     "ResourceId": {
-     "Ref": "buttonClickApibuttonClick9A834B07"
+     "Ref": "buttonClickApibuttonClickbuttonTypeclickTypeA304D86C"
     },
     "RestApiId": {
      "Ref": "buttonClickApi0DA777A7"
@@ -520,13 +816,13 @@
     }
    },
    "Metadata": {
-    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/GET/Resource"
+    "aws:cdk:path": "IOTBackendStackdev/buttonClickApi/Default/buttonClick/{buttonType}/{clickType}/GET/Resource"
    }
   },
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/01Qy07DMBD8ltwdtwFEr7QgboiocK+29tK6je0oa1NFkf8dP1La086MZ0c7fuBPKz4tK7hQLeS57tSeT18OxJlFaTfJ0YC2MorfsO+Qvf6YDAKjR77x4oxuA4SMSKe9QZlDCwNodDgk8z8JTEG0tLZTYswvBW1tSU0zhe6ACB3xdRqsA72XwKdoePdGOGVN3sVBK6LIAoNeHcDhBUY+bZHculc57wbXQlhvHHvDvrOjxgijesdi30M+ooC4av0gMBe7kjmz4A90RyuTVFAIN18+PAXFr0iOT+967+7XA1vW0PVH4MvqZf74RZqlbd2PMdPMljaTa/nAjJXIT7T4bZ55s+JNdSKl6iH2Uxr5tsw/po+xstYBAAA="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1VQTW+DMAz9LdxDCtu0Xkc37TYNsd0rEzyakg+EwyqE+O9LAl23k5/t52c/3/GHPZ+zBC6UiqZLlaz5/OFAdMyXjnMzGdC28cVPqBWy5y8TwcLonh9G0aE7ACEj0mFukKYtYQCNDodA/k0WJsFTSqukmGJnRZVdVUMMokcgQke8CIEp0HUDfPaE19EIJ62JszhoSeSzhUEvW3B4gYnPFZIrehn1brAQwo7GsRfslZ00euirfzLvt41HrMCP2nEQGI29oTvZJjQ3dO1uSyJells5Hh6E/CsC5310/ej+sVmWgupPwLPkaXv8LsTVbdpPfpHZKGVMruYXZmyD/Ey77/yR53ueJ2eSMh28P6mRV2v8AXqEvMDWAQAA"
    },
    "Metadata": {
     "aws:cdk:path": "IOTBackendStackdev/CDKMetadata/Default"

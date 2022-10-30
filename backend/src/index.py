@@ -3,6 +3,7 @@ print(sys.path)
 import logging
 from lambda_clicker import handler as clickHandler
 from datetime import datetime as dt
+import traceback
 
 logger = logging.getLogger()
 logger.setLevel(logging.getLevelName(os.environ["LOGGING_LEVEL"]) )
@@ -14,27 +15,39 @@ def handler(event: any, context: any):
     logger.info("event: {}".format(json.dumps(event) ))
     resource = event["resource"]
     method = event["httpMethod"]
+    parameters = event["pathParameters"]
     #     "clickType": "SINGLE",
     #     "reportedTime": "2018-05-04T23:26:33.747Z"
     SINGLE_CLICK = os.environ["SINGLE_CLICK"]
     DOUBLE_CLICK = os.environ["DOUBLE_CLICK"]
     HOLD = os.environ["HOLD"]
 
-    resource_parts = resource[1:].split("/")
+
     deviceInfo=dict(attributes=dict(button_key=1))
-    placementInfo = dict(projectName=resource_parts[0])
+    placementInfo = dict(projectName=parameters.get("buttonType", None))
     clickEvent = dict(buttonClicked=dict(reportedTime=dt.now().isoformat() ))
-    if resource_parts[1] == SINGLE_CLICK: 
+    clickType = parameters.get("clickType", None)
+    if clickType == SINGLE_CLICK: 
         clickEvent["buttonClicked"]["clickType"]="SINGLE"
-    elif resource_parts[1] == HOLD:
-        clickEvent["buttonClicked"]["clickType"]="LONG"
-    elif resource_parts[1] == DOUBLE_CLICK:
+    elif clickType == HOLD:
+        clickEvent["buttonClicked"]["clickType"]="LONG"   # OneClick terminology
+    elif clickType == DOUBLE_CLICK:
         clickEvent["buttonClicked"]["clickType"]="DOUBLE"
 
+    response = {}
     if clickEvent["buttonClicked"].get("clickType", None) == None:
-        response = {}
         response["statusCode"] = 300
-        response["message"] = "Nope"
-        return response 
+        response["body"] = "Nope"
     else:
-        clickHandler(dict(deviceEvent=clickEvent, deviceInfo=deviceInfo, placementInfo=placementInfo), context)
+        try: 
+            clickHandler(dict(deviceEvent=clickEvent, deviceInfo=deviceInfo, placementInfo=placementInfo), context)
+            response["statusCode"] = 200
+            response["body"] = f"Button Clicked:: {clickEvent}"
+        except Exception:
+            print(f"Call To Click Failed::")
+            response["statusCode"] = 503
+            response["body"] = "NopeClick"
+            traceback.print_exc()
+
+    print(f"RETURNING RESPONSE:: {response}")    
+    return response 
